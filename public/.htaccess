@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteRule ^404$ /static/404.php
+RewriteRule ^500$ /static/500.php
+ErrorDocument 404 /404
+ErrorDocument 500 /500
