@@ -8,6 +8,16 @@ $db = new mysqli($db_host, $db_user, $db_pwd, $db_name);
 if ($db->connect_errno) {
  // header('Location: 500');
 }
+/* obvious */
+function get_item ($item, $table, $col) {
+  global $db;
+  if ($stmt = $db->prepare('SELECT * FROM '.$table.' WHERE '.$col.' = ?')) {
+    $stmt->bind_param('s',$item);
+    $stmt->execute();
+    $res = $stmt->get_result(); $stmt->close();
+    return $res->num_rows === 0 ? false : $res->fetch_assoc();
+  }
+}
 
 // POSTS
 /* array_posts ( (int) limit [, (int) offset, (string) query]) => (array)
@@ -23,19 +33,12 @@ function array_posts ($limit, $offset=0, $query='') {
   $res->free();
   return $row;
 }
-/* get_post ( (any) item [, (string) url]) => (array)
+/* get_item ( (any) item [, (string) url] => (array)
  * Fetch a post with $item as a value for $col (url if nothing is passed as a
  * second argument) and return every data from it in an array
  */
-function get_post ($item, $col='url') {
-  global $db;
-  if ($stmt = $db->prepare('SELECT * FROM posts WHERE '.$col.' = ?')) {
-    $stmt->bind_param('s',$item);
-    $stmt->execute();
-    $res = $stmt->get_result(); $stmt->close();
-    return $res->num_rows === 0 ? false : $res->fetch_assoc();
-  }
-}
+function get_post($item,$col='url') { return get_item ($item,$col); }
+
 /* write_post ( (string) name, (string) url, (int) author_id, (string) contributors_id, (string) content, (string) synopsis, (int) has_preview, (string) tags_id) => (void)
  * Call the function with correct arguments to append a blog post to the posts table in the database
  */
@@ -71,8 +74,13 @@ function delete_post($item, $col='url') {
   $stmt->bind_param('s',$item);
   $stmt->execute(); $stmt->close();
 }
+
 // TODO
 function construct_url($string) {
   // do something
   return $string;
+}
+// AUTH
+function add_user($array) {
+    global $db;
 }
