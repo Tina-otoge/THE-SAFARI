@@ -33,7 +33,7 @@ function array_posts ($limit, $offset=0, $query='') {
   $res->free();
   return $row;
 }
-/* get_item ( (any) item [, (string) url] => (array)
+/* get_item ( (any) item [, (string) url]) => (array)
  * Fetch a post with $item as a value for $col (url if nothing is passed as a
  * second argument) and return every data from it in an array
  */
