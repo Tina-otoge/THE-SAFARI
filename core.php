@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'aliases.php';
+require_once 'config.inc.php';
+require_once 'aliases.inc.php';
 
 // DATABASE CONNECTION
 $db = new mysqli($db_host, $db_user, $db_pwd, $db_name);
@@ -9,7 +9,7 @@ if ($db->connect_errno) {
 }
 
 // DATABASE INTERACTIONS
-require_once 'database.php';
+require_once 'database.inc.php';
 
 /* write_post ( (string) name, (string) url, (int) author_id, (string) contributors_id, (string) content, (string) synopsis, (int) has_preview, (string) tags_id) => (void)
  * Call the function with correct arguments to append a blog post to the posts table in the database
@@ -23,19 +23,6 @@ function write_post ($name, $url, $author_id, $contributors_id, $content, $synop
     $stmt->execute(); $stmt->close();
   }
 }
-/* delete_post ( (any) item [, (string) url]) => (array) */
-function delete_post($item, $col='url') {
-  global $db;
-  $stmt = $db->prepare('DELETE FROM `posts` WHERE `posts`.`'.$col(.'` = ?');
-  $stmt->bind_param('s',$item);
-  $stmt->execute(); $stmt->close();
-}
-
-// TODO
-function construct_url($string) {
-  // do something
-  return $string;
-}
 // AUTH
 function add_user($name,$hpw) {
   global $db;
@@ -43,7 +30,13 @@ function add_user($name,$hpw) {
   $stmt->bind_param('ss',$name,$hpw);
   $stmt->execute(); $stmt->close();
 }
-function encrypt($string) {
+
+// TODO
+function construct_url($string) {
+  // do something
+  return $string;
+function hash($string) {
   global $secu;
   // if blabla
+}
 }

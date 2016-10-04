@@ -12,7 +12,7 @@ function get_item ($item, $table, $col) {
   }
 }
 
-/* update_post ( (array) array, (any) item [, (string) url]) => (void) */
+/* update_post ( (array) array, (any) item, (string) table, (string) col) => (void) */
 function update_item ($array, $item, $table, $col) {
   global $db;
   $prev = get_item($item,$col);
@@ -41,4 +41,12 @@ function array_items ($table, $cols, $limit, $offset=0) {
   $row = $res->fetch_all(MYSQLI_ASSOC);
   $res->free();
   return $row;
+}
+
+/* delete_item ( (any) item, (string) table, (string) col ) => (void) */
+function delete_item($item, $table, $col) {
+  global $db;
+  $stmt = $db->prepare('DELETE FROM `posts` WHERE `'$table'`.`'.$col.'` = ?');
+  $stmt->bind_param('s',$item);
+  $stmt->execute(); $stmt->close();
 }

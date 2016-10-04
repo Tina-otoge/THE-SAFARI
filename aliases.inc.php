@@ -38,3 +38,7 @@ function array_posts(
 ) {
   return array_items ($limit,$offset,'posts',$cols);
 }
+
+function delete_post($item,$col='url') {
+  return delete_item ($item, 'posts', $col);
+}
