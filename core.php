@@ -37,7 +37,7 @@ function array_posts ($limit, $offset=0, $query='') {
  * Fetch a post with $item as a value for $col (url if nothing is passed as a
  * second argument) and return every data from it in an array
  */
-function get_post($item,$col='url') { return get_item ($item,$col); }
+function get_post($item,$col='url') { return get_item ($item,'posts',$col); }
 
 /* write_post ( (string) name, (string) url, (int) author_id, (string) contributors_id, (string) content, (string) synopsis, (int) has_preview, (string) tags_id) => (void)
  * Call the function with correct arguments to append a blog post to the posts table in the database
@@ -52,11 +52,11 @@ function write_post ($name, $url, $author_id, $contributors_id, $content, $synop
   }
 }
 /* update_post ( (array) array, (any) item [, (string) url]) => (void) */
-function update_post ($array, $item, $col='url') {
+function update_item ($array, $item, $table, $col) {
   global $db;
-  $prev = get_post($item,$col);
+  $prev = get_item($item,$col);
   $new = array_replace($prev,(array_intersect_key($array,$prev)));
-  $query = 'UPDATE posts SET ';
+  $query = 'UPDATE `'.$table.'` SET ';
   foreach ($new as $key => $value) {
     if (is_int($value)) {
     $query .= '`'.$key.'` = '.$value.', ';
@@ -64,13 +64,14 @@ function update_post ($array, $item, $col='url') {
     $query .= '`'.$key.'` = \''.$value.'\', ';
     }
   }
-  $query = substr($query,0,-2).' WHERE `posts`.`id` = '.$new['id'].'';
+  $query = substr($query,0,-2).' WHERE `'.$table.'`.`id` = '.$new['id'].'';
   return $db->query($query);
 }
+function update_post($array,$item,$col='url') { return update_item ($array,$item,'posts',$col); }
 /* delete_post ( (any) item [, (string) url]) => (array) */
 function delete_post($item, $col='url') {
   global $db;
-  $stmt = $db->prepare('DELETE FROM `posts` WHERE `posts`.`'.$col.'` = ?');
+  $stmt = $db->prepare('DELETE FROM `posts` WHERE `posts`.`'.$col(.'` = ?');
   $stmt->bind_param('s',$item);
   $stmt->execute(); $stmt->close();
 }
@@ -81,6 +82,13 @@ function construct_url($string) {
   return $string;
 }
 // AUTH
-function add_user($array) {
-    global $db;
+function add_user($name,$hpw) {
+  global $db;
+  $stmt = $db->prepare('INSERT INTO `users` (name, hpw) VALUES (?, ?)');
+  $stmt->bind_param('ss',$name,$hpw);
+  $stmt->execute(); $stmt->close();
+}
+function encrypt($string) {
+  global $secu;
+  // if blabla
 }

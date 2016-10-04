@@ -12,11 +12,13 @@ $db_pwd = '';
  * and unique salt, which isn't stealable from the database.
  * (Of course this can be used alongside other security methods)
  */
-$hash_generate_salt_file = true;
+$secu['hash_generate_salt_file'] = true;
+
 /* Useful if you doesn't trust my algorithm and want to use your own
  * (This won't create a file, it will use the existent one in /hash_salt)
  */
-$hash_use_salt_file = true;
+$secu['hash_use_salt_file'] = true;
+
 /* This salt will be mixed in the hashing of the users password.
  * This isn't more efficient than the generated salt file, but it's useful if
  * you want a little more or doesn't want to a salt file at all.
@@ -25,4 +27,4 @@ $hash_use_salt_file = true;
  * basically anything. But please, don't leave it default.
  * Leave an empty string '' if you do not want to use the bonus salt.
  */
-$hash_bonus_salt = 'Following @skielred on Twitter changed my life';
+$secu['hash_bonus_salt'] = 'Following @skielred on Twitter changed my life';
