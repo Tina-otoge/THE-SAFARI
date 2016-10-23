@@ -15,7 +15,9 @@ function get_item ($item, $table, $col) {
 /* update_post ( (array) array, (any) item, (string) table, (string) col) => (void) */
 function update_item ($array, $item, $table, $col) {
   global $db;
+  // prev = $item without $array implanted
   $prev = get_item($item,$table,$col);
+  // new  = prev without $array implanted
   $new = array_replace($prev,(array_intersect_key($array,$prev)));
   $query = 'UPDATE `'.$table.'` SET ';
   foreach ($new as $key => $value) {
