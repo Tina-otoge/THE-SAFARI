@@ -1,9 +1,7 @@
 <?php
 // DATABASE
-$db_host = 'localhost';
-$db_name = 'safari';
-$db_user = 'root';
-$db_pwd = '';
+
+//TODO: Support for databases type other than SQLite3 (not a priority)
 
 // PASSWORDS SECURITY
 // Warning : This session is very commented.

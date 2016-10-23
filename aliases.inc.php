@@ -36,7 +36,7 @@ function array_posts(
     has_preview,
     tags_id'
 ) {
-  return array_items ($limit,$offset,'posts',$cols);
+  return array_items ('posts',$cols,$limit,$offset);
 }
 
 function delete_post($item,$col='url') {
