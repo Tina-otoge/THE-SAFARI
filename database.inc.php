@@ -48,7 +48,7 @@ function array_items ($table, $limit, $offset=0) {
 /* delete_item ( (any) item, (string) table, (string) col ) => (void) */
 function delete_item($item, $table, $col) {
   global $db;
-  $stmt = $db->prepare('DELETE FROM `posts` WHERE `'.$table.'`.`'.$col.'` = ?');
-  $stmt->bind_param('s',$item);
-  $stmt->execute(); $stmt->close();
+  $stmt = $db->prepare('DELETE FROM '.$table.' WHERE `'.$table.'`'.$col.'` = :item');
+  $stmt->bindValue(':item',$item,PDO::PARAM_STR);
+  $stmt->execute();
 }
