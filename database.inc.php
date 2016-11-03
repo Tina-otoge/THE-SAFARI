@@ -17,6 +17,9 @@ function update_item ($array, $item, $table, $col) {
   global $db;
   // prev = $item without $array implanted
   $prev = get_item($item,$table,$col);
+  if(!$prev) {
+    return /* TODO : error */;
+  } else {
   // new  = prev without $array implanted
   $new = array_replace($prev,(array_intersect_key($array,$prev)));
   $query = 'UPDATE `'.$table.'` SET ';
@@ -29,6 +32,7 @@ function update_item ($array, $item, $table, $col) {
   }
   $query = substr($query,0,-2).' WHERE `'.$table.'`.`id` = '.$new['id'].'';
   return $db->query($query);
+  }
 }
 
 /* array_items ( (string) table, (string) cols, (int) limit [, (int) offset]) => (array)
@@ -43,6 +47,39 @@ function array_items ($table, $limit, $offset=0) {
   $stmt->execute();
   $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
   return $res;
+}
+
+function get_structure($table) {
+  global $db;
+  // TODO: support things other than sqlite
+  $r = $db->query('PRAGMA table_info('.$table.')');
+  $r = $r->fetchAll();
+  $struct = array();
+  foreach ($r as $key) {
+    $struct[] = $key['name'];
+  }
+  return $struct;
+}
+
+// FIXME
+function add_item($array,$table) {
+  global $db;
+  // struct = structure of $table
+  $struct = get_structure($table);
+  // a = values from $array which exists in $struct
+  $a = array_intersect_key($array,array_flip($struct));
+  $pcols = array();
+  foreach(array_flip($a) as $key) {
+    $pcols[] = ':'.$key;
+  }
+  $query =
+    'INSERT INTO `'.$table.'` ('.$cols = implode(array_flip($a),', ').')
+    VALUES ('.implode($pcols,', ').')';
+  $stmt = $db->prepare($query);
+  foreach(array_flip($a) as $key) {
+    $stmt->bindValue(':'.$key,$a[$key]);
+  }
+  $stmt->execute();
 }
 
 /* delete_item ( (any) item, (string) table, (string) col ) => (void) */

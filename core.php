@@ -22,11 +22,11 @@ function write_post ($name, $url, $author_id, $contributors_id, $content, $synop
   }
 }
 // AUTH
-//FIXME: PDO
 function add_user($name,$hpw) {
   global $db;
-  $stmt = $db->prepare('INSERT INTO `users` (name, hpw) VALUES (?, ?)');
-  $stmt->bind_param('ss',$name,$hpw);
+  $stmt = $db->prepare('INSERT INTO `users` (name, hpw) VALUES (:name, :hpw)');
+  $stmt->bindValue(':name',$name,PDO::PARAM_STR);
+  $stmt->bindValue(':hpw',$hpw,PDO::PARAM_STR);
   $stmt->execute(); $stmt->close();
 }
 
@@ -42,13 +42,7 @@ function cook($string) {
 }
 ?>
 <pre>
-<?php print_r(update_item(
-    array('preview'=>'else'),
-    'slt',
-    'ranks',
-    'name'
-  )
-);
-
+<?php 
+  print_r(add_item(array('name'=>'homo','preview'=>'pd'),'ranks'));
 ?>
 </pre>
